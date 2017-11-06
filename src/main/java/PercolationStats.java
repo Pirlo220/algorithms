@@ -84,14 +84,5 @@ public class PercolationStats {
 	        return mean() + (1.96*stddev())/(Math.sqrt(t)); 
 	    }
 	    
-	    // test client, described below
-	    public static void main(String[] args)   
-	    {
-	        PercolationStats stats = new PercolationStats(3, 4);//(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
-	        System.out.println("mean                    = " + stats.mean());
-	        System.out.println("stddev                  = " + stats.stddev());
-	        System.out.println("95% confidence interval = " + stats.confidenceLo() + 
-	                ", " + stats.confidenceHi());
-	        
-	    }
+	  
 }

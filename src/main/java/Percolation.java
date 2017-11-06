@@ -95,6 +95,15 @@ public class Percolation {
 	public boolean percolates() {
 		return wuf.connected(top, bottom);
 	}
-
+	  // test client, described below
+    public static void main(String[] args)   
+    {
+        PercolationStats stats = new PercolationStats(Integer.valueOf(args[0]), Integer.valueOf(args[1]));
+        System.out.println("mean                    = " + stats.mean());
+        System.out.println("stddev                  = " + stats.stddev());
+        System.out.println("95% confidence interval = " + stats.confidenceLo() + 
+                ", " + stats.confidenceHi());
+        
+    }
 	
 }
