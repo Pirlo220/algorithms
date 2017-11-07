@@ -2,50 +2,66 @@ package main.java.com.algth.w01;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import javafx.scene.input.TouchPoint;
 
 public class Percolation {
-	private WeightedQuickUnionUF wuf;
-	private boolean[] grid;
-	private int nValue;
-	private int top;
-	private int bottom;
+	private final WeightedQuickUnionUF wuf;
+	private final boolean[] grid;
+	private final int nValue;
+	private final int top;
+	private final int bottom;
+	private int num = 0;
 	
 	public Percolation(int n) {
 		// create n-by-n grid, with all sites blocked
 		if(n <= 0) {
-			new IllegalArgumentException();
+			throw new IllegalArgumentException();
 		}
-		wuf = new WeightedQuickUnionUF((n * n) + 2);
-		grid = new boolean[n * n];
-		top = n * n;
-		bottom = n + n + 1;
+		this.wuf = new WeightedQuickUnionUF((n * n) + 2);
+		this.grid = new boolean[n * n];
+		this.top = n * n;
+		this.bottom = n + n + 1;
 		// union first row
-		for(int i = 0; i < n; i++) {
-			wuf.union(i, top);
+		for (int i = 0; i < n; i++) {
+			this.wuf.union(i, this.top);
 		}
 		// union last row
-		for(int i = ((n * n) - n); i < (n * n); i++) {
-			wuf.union(i, bottom);
+		for (int i = ((n * n) - n); i < (n * n); i++) {
+			wuf.union(i, this.bottom);
 		}
 		
-		nValue = n;
+		this.nValue = n;
 	}
+	
+	 /**
+     * Validate the row and col indices.
+     *
+     * @param row row index
+     * @param col col index
+     */
+    private void validate(int row, int col) {
+        if (row <= 0 || row >= this.nValue) {
+            throw new IndexOutOfBoundsException("Invalid input : row index out of bounds !");
+        }
+        if (col <= 0 || row >= this.nValue) {
+            throw new IndexOutOfBoundsException("Invalid input : col index out of bounds !");
+        }
+    }
 
 	// open site (row, col) if it is not open already
 	public void open(int row, int col) {
+		validate(row, col);
+		if (isOpen(row, col)) return;
+		
 		int currentIndex = (row  * nValue - (nValue - col)) - 1;
-		if(!isOpen(row, col)) {
-			grid[currentIndex] = true;	
-		}
+				
+		this.grid[currentIndex] = true;
+		this.num++;		
 		
 		// Top neighbor
-		if(row > 1) {
+		if (row > 1) {
 			int topNeighbor = ((row -1) * nValue - (nValue - col)) - 1;
-			if(isOpen((row - 1), col)) {
+			if (isOpen((row - 1), col)) {
 				wuf.union(topNeighbor, currentIndex);
 			}
 		}
@@ -53,24 +69,24 @@ public class Percolation {
 		// LEFT neighbor		
 		if(col > 1) {
 			int leftNeighbor = (row  * nValue - (nValue - (col -1))) - 1;			
-			if(isOpen(row, col - 1)){
+			if (isOpen(row, col - 1)){
 				wuf.union(leftNeighbor, currentIndex);
 			}
 		}
 		
 		// RIGHT neighbor		
-		if(col < nValue) {
+		if (col < nValue) {
 			int rightNeighbor = (row  * nValue - (nValue - (col + 1))) - 1;			
-			if(isOpen(row, col + 1)){
+			if (isOpen(row, col + 1)){
 				wuf.union(rightNeighbor, currentIndex);
 			}
 		}
 		
 		// Bottom neighbor
-		if(row < nValue) {
-			int BottomNeighbor = ((row + 1) * nValue - (nValue - col)) - 1;
-			if(isOpen(row + 1, col)) {
-				wuf.union(BottomNeighbor, currentIndex);
+		if (row < nValue) {
+			int bottomNeighbor = ((row + 1) * nValue - (nValue - col)) - 1;
+			if (isOpen(row + 1, col)) {
+				wuf.union(bottomNeighbor, currentIndex);
 			}
 		}		
 	}
@@ -87,11 +103,7 @@ public class Percolation {
 	
 	// number of open sites
 	public int numberOfOpenSites() {
-		int numberOfOpenSites = 0;
-		for(int i = 0; i < grid.length; i++) {
-			if(grid[i]) numberOfOpenSites++;
-		}
-		return numberOfOpenSites;
+		return num;
 	}
 
 	public boolean percolates() {
