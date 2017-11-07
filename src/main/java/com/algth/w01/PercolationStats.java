@@ -4,12 +4,9 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
-/**
- * @author sunyue
- * @version 1.0    2017/1/4 16:38
- */
 public class PercolationStats {
-    // sample mean of percolation threshold
+    private static final double _1_96 = 1.96;
+	// sample mean of percolation threshold
     private double mean;
     // sample standard deviation of percolation threshold
     private double stddev;
@@ -43,8 +40,8 @@ public class PercolationStats {
         }
         mean = StdStats.mean(est);
         stddev = StdStats.stddev(est);
-        confidenceLo = mean - (1.96 * stddev) / Math.sqrt(trials);
-        confidenceHi = mean + (1.96 * stddev) / Math.sqrt(trials);
+        confidenceLo = mean - (_1_96 * stddev) / Math.sqrt(trials);
+        confidenceHi = mean + (_1_96 * stddev) / Math.sqrt(trials);
     }
 
     public static void main(String[] args) {

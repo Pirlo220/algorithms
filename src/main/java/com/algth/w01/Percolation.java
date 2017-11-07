@@ -2,6 +2,7 @@ package main.java.com.algth.w01;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -14,13 +15,13 @@ public class Percolation {
 	
 	public Percolation(int n) {
 		// create n-by-n grid, with all sites blocked
-		if(n <= 0) {
+		if (n <= 0) {
 			throw new IllegalArgumentException();
 		}
 		this.wuf = new WeightedQuickUnionUF((n * n) + 2);
 		this.grid = new boolean[n * n];
 		this.top = n * n;
-		this.bottom = n + n + 1;
+		this.bottom = (n * n) + 1;
 		// union first row
 		for (int i = 0; i < n; i++) {
 			this.wuf.union(i, this.top);
@@ -40,10 +41,10 @@ public class Percolation {
      * @param col col index
      */
     private void validate(int row, int col) {
-        if (row <= 0 || row >= this.nValue) {
+        if (row <= 0 || row > this.nValue) {
             throw new IndexOutOfBoundsException("Invalid input : row index out of bounds !");
         }
-        if (col <= 0 || row >= this.nValue) {
+        if (col <= 0 || col > this.nValue) {
             throw new IndexOutOfBoundsException("Invalid input : col index out of bounds !");
         }
     }
@@ -67,9 +68,9 @@ public class Percolation {
 		}
 		
 		// LEFT neighbor		
-		if(col > 1) {
+		if (col > 1) {
 			int leftNeighbor = (row  * nValue - (nValue - (col -1))) - 1;			
-			if (isOpen(row, col - 1)){
+			if (isOpen(row, col - 1)) {
 				wuf.union(leftNeighbor, currentIndex);
 			}
 		}
@@ -77,7 +78,7 @@ public class Percolation {
 		// RIGHT neighbor		
 		if (col < nValue) {
 			int rightNeighbor = (row  * nValue - (nValue - (col + 1))) - 1;			
-			if (isOpen(row, col + 1)){
+			if (isOpen(row, col + 1)) {
 				wuf.union(rightNeighbor, currentIndex);
 			}
 		}
@@ -98,7 +99,7 @@ public class Percolation {
 	
 	// is site (row, col) full?
 	public boolean isFull(int row, int col) {
-		return wuf.connected(top, (row - 1) * (col - 1));		
+		return wuf.connected(top, (row  * nValue - (nValue - col)) - 1);		
 	}
 	
 	// number of open sites
@@ -112,12 +113,29 @@ public class Percolation {
 	  // test client, described below
     
     public static void main(String[] args) {
-        In in = new In(args[0]);
-        int n = in.readInt();
+        //In in = new In(args[0]);
+        int n = 1;//in.readInt();
         Percolation percolation = new Percolation(n);
         boolean isPercolated = false;
         int count = 0;
-        while (!in.isEmpty()) {
+        
+        while(!percolation.percolates()) {
+        	int row = StdRandom.uniform(1, n + 1);
+        	int col = StdRandom.uniform(1, n + 1);
+        	StdOut.println("isFull: " + percolation.isFull(row, col));
+        	StdOut.println("isOpen: " + percolation.isOpen(row, col));
+        	StdOut.println("row: " + row);
+        	StdOut.println("col: " + col);
+        	percolation.open(row, col);
+        	
+        	StdOut.println(percolation.numberOfOpenSites() + " open sites");
+            if (percolation.percolates()) {
+                StdOut.println("percolates");
+            } else {
+                StdOut.println("does not percolate");
+            }
+        }
+        /*while (!in.isEmpty()) {
             int row = in.readInt();
             int col = in.readInt();
             if (!percolation.isOpen(row, col)) {
@@ -136,6 +154,6 @@ public class Percolation {
             StdOut.println("does not percolate");
         }
 
-	
+	*/
     }
 }
