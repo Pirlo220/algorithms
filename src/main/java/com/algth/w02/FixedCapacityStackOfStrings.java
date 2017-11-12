@@ -21,6 +21,8 @@ public class FixedCapacityStackOfStrings {
 	public String pop() {
 		// decrement n
 		// then use to index into array
-		return s[--n];
+		String node =  s[--n];
+		s[n] = null;
+		return node;
 	}
 }
