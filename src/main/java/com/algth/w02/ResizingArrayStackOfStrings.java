@@ -1,5 +1,11 @@
 package main.java.com.algth.w02;
 
+/***
+ * In order to resize, every time the stack is full you double its capacity. It is called amortized analysis
+ * It take 3N accesses
+ * @author sergio
+ *
+ */
 public class ResizingArrayStackOfStrings {
 	private String[] s;
 	private int N;
